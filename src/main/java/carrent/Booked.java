@@ -1,8 +1,7 @@
-
 package carrent;
 import java.sql.Date;
 
-public class BookingCancelled extends AbstractEvent {
+public class Booked extends AbstractEvent {
 
     private Long id;
     private Long productId;
@@ -54,4 +53,3 @@ public class BookingCancelled extends AbstractEvent {
         this.endDate = endDate;
     }
 }
-
