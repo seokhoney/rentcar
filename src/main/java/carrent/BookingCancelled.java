@@ -50,7 +50,7 @@ public class BookingCancelled extends AbstractEvent {
         return endDate;
     }
 
-    public void getBookingTo(Date endDate) {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 }
