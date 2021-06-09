@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>customercenter</name>
+	<name>boot-camp-gateway</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -22,7 +22,7 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1623144384124</id>
+			<id>1623144384110</id>
 			<name></name>
 			<type>30</type>
 			<matcher>
