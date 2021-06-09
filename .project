@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>store</name>
+	<name>customercenter</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -22,7 +22,7 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1623144384146</id>
+			<id>1623144384124</id>
 			<name></name>
 			<type>30</type>
 			<matcher>
