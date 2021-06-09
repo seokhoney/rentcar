@@ -21,20 +21,22 @@ public class Booking {
     @PostPersist
     public void onPostPersist(){
 
-        try{
+        //try{
             boolean rslt = BookingApplication.applicationContext.getBean(carrent.external.ProductService.class)
             .modifyStock(this.getProductId(), this.getQty());
+            System.out.println(rslt);
 
             if (rslt) {
                 this.setStatus("Booked");
+
                 Booked booked = new Booked();
                 BeanUtils.copyProperties(this, booked);
                 booked.publishAfterCommit();
             } else {throw new BookingException("No Available stock!");}
             
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
+        //}catch (Exception e) {
+       //     e.printStackTrace();
+       //}
 
     }
 

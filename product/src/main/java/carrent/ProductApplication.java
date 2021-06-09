@@ -15,6 +15,7 @@ public class ProductApplication {
     public static void main(String[] args) {
         applicationContext = SpringApplication.run(ProductApplication.class, args);
 
+        /*
         ProductRepository productRepository = applicationContext.getBean(ProductRepository.class);
         // 초기 상품 셋팅
         String[] products = {"Tesla", "IONIQ"};
@@ -24,12 +25,13 @@ public class ProductApplication {
 
             product.setName(p);
             product.setStock(i*2);
-            //product.setProductId(product.getProductId());
-            product.setProductId(product.getId());
+            product.setProductId(product.getProductId());
+            //product.setProductId(product.getId());
 
             i++;
             productRepository.save(product);
         }
+        */
         
     }
 }

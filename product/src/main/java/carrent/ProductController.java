@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.sql.Date;
 import java.util.List;
 
  @RestController
@@ -26,10 +28,12 @@ public boolean modifyStock(HttpServletRequest request, HttpServletResponse respo
 
                 Product product = productRepository.findByProductId(productId);
 
-                if (product.getStock() >= qty) {
-                        product.setStock(product.getStock() - qty);
-                        productRepository.save(product);
-                        status = true;
+                if(product != null){
+                        if (product.getStock() >= qty) {
+                                product.setStock(product.getStock() - qty);
+                                productRepository.save(product);
+                                status = true;
+                        }
                 }
 
                 return status;
