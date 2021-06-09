@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: booking
+  name: store
   labels:
-    app: booking
+    app: store
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: booking
+      app: store
   template:
     metadata:
       labels:
-        app: booking
+        app: store
     spec:
       containers:
-        - name: booking
-          image: username/booking:latest
+        - name: store
+          image: username/store:latest
           ports:
             - containerPort: 8080
           readinessProbe:
