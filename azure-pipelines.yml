@@ -67,8 +67,8 @@ stages:
     - task: Docker@2
       displayName: buildAndPush
       inputs:
-        containerRegistry: $(containerRegistryDockerConnection)
-        repository: $(imageRepository)
+        containerRegistry: 'acr-product'
+        repository: product
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
         tags: |
