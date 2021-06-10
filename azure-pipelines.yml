@@ -37,16 +37,6 @@ stages:
     pool:
       vmImage: $(vmImageName)
     steps:
-    - task: CopyFiles@2
-      inputs:
-        SourceFolder: $(system.defaultworkingdirectory)
-        Contents: 'azure/*'
-        TargetFolder: $(build.artifactstagingdirectory)
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: $(Build.ArtifactStagingDirectory)
-        ArtifactName: 'drop'
-        publishLocation: 'Container'
     - task: CacheBeta@1
       inputs:
         key: 'maven | "$(Agent.OS)" | **/pom.xml'
@@ -63,6 +53,15 @@ stages:
         jdkVersionOption: '1.8'
         jdkArchitectureOption: 'x64'
         goals: 'package'
+    - task: CopyFiles@2
+      displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+      inputs:
+        SourceFolder: '$(system.defaultworkingdirectory)'
+        Contents: 'azure/*'
+        TargetFolder: '$(build.artifactstagingdirectory)'
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact: drop'
+
     - task: Docker@2
       inputs:
         containerRegistry: $(containerRegistryDockerConnection)
