@@ -41,10 +41,10 @@ stages:
       inputs:
         SourceFolder: $(system.defaultworkingdirectory)
         Contents: 'azure/*'
-        TargetFolder: $(build.artifactstagingdirectory) 
+        TargetFolder: '$(build.artifactstagingdirectory)' 
     - task: PublishBuildArtifacts@1   
       inputs:
-        PathtoPublish: $(Build.ArtifactStagingDirectory)    
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'    
         ArtifactName: 'drop'
         publishLocation: 'Container'
     - task: CacheBeta@1
