@@ -43,6 +43,8 @@ stages:
     - task: PublishBuildArtifacts@1   
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'    
+        ArtifactName: 'drop'
+        publishLocation: 'Container'
     - task: CacheBeta@1
       inputs:
         key: 'maven | "$(Agent.OS)" | **/pom.xml'
