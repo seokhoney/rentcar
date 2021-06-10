@@ -39,10 +39,12 @@ stages:
     steps:
     - task: CopyFiles@2
       inputs:
-        TargetFolder: '$(build.artifactstagingdirectory)' 
+        SourceFolder: $(system.defaultworkingdirectory)
+        Contents: 'azure/*'
+        TargetFolder: $(build.artifactstagingdirectory) 
     - task: PublishBuildArtifacts@1   
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'    
+        PathtoPublish: $(Build.ArtifactStagingDirectory)    
         ArtifactName: 'drop'
         publishLocation: 'Container'
     - task: CacheBeta@1
