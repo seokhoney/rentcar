@@ -60,7 +60,7 @@ stages:
         Contents: 'azure/*'
         TargetFolder: '$(build.artifactstagingdirectory)'
     - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact: drop'
+      displayName: 'Publish Artifact: drop-product'
 
     - task: Docker@2
       inputs:
