@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: product
+  name: booking
   labels:
-    app: product
+    app: booking
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: product
+      app: booking
   template:
     metadata:
       labels:
-        app: product
+        app: booking
     spec:
       containers:
-        - name: product
-          image: karyskccacr.azurecr.io/product:latest
+        - name: booking
+          image: karyskccacr.azurecr.io/booking:latest
           ports:
             - containerPort: 8080
           readinessProbe:
