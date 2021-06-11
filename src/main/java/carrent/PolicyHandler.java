@@ -8,31 +8,27 @@ import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class PolicyHandler{
-    @Autowired BookingRepository bookingRepository;
+    @Autowired ProductRepository productRepository;
 
     @StreamListener(KafkaProcessor.INPUT)
-    public void wheneverCarRented_UpdateStatus(@Payload CarRented carRented){
+    public void wheneverBookingCancelled_IncreaseStock(@Payload BookingCancelled bookingCancelled){
 
-        if(carRented.isMe()){        
-            Optional<Booking> optionalBooking = bookingRepository.findById(carRented.getBookingId());
-            Booking booking = optionalBooking.get();
-            booking.setStatus("Rented");
-            bookingRepository.save(booking);
+        if(bookingCancelled.isMe()){        
+            Product product = productRepository.findByProductId(Long.valueOf(bookingCancelled.getProductId()));
+            product.setStock(product.getStock() + bookingCancelled.getQty());
+            productRepository.save(product);  
           }
             
     }
     @StreamListener(KafkaProcessor.INPUT)
-    public void wheneverCarReturned_UpdateStatus(@Payload CarReturned carReturned){
+    public void wheneverCarReturned_IncreaseStock(@Payload CarReturned carReturned){
 
-        if(carReturned.isMe()){  
-            Optional<Booking> optionalBooking = bookingRepository.findById(carReturned.getBookingId());
-            Booking booking = optionalBooking.get();
-            booking.setStatus("Returned");
-            bookingRepository.save(booking);
+        if(carReturned.isMe()){        
+            Product product = productRepository.findByProductId(Long.valueOf(carReturned.getProductId()));
+            product.setStock(product.getStock() + carReturned.getQty());
+            productRepository.save(product);  
           }
             
     }

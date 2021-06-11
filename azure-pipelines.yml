@@ -14,7 +14,7 @@ variables:
   # containerRegistryDockerConnection: 'acr'
   # environment: 'aks.default'
 - name: imageRepository
-  value: 'booking'
+  value: 'product'
 - name: dockerfilePath
   value: '**/Dockerfile'
 - name: tag
@@ -35,6 +35,8 @@ stages:
   - job: Build
     displayName: Build
     pool:
+      name: Azure Pipelines
+      demands: maven
       vmImage: $(vmImageName)
     steps:
     - task: CacheBeta@1
@@ -46,6 +48,7 @@ stages:
         path: $(MAVEN_CACHE_FOLDER)
       displayName: Cache Maven local repo
     - task: Maven@3
+      displayName: 'Maven pom.xml'
       inputs:
         mavenPomFile: 'pom.xml'
         options: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
@@ -60,11 +63,12 @@ stages:
         Contents: 'azure/*'
         TargetFolder: '$(build.artifactstagingdirectory)'
     - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact: drop-product'        
+      displayName: 'Publish Artifact: drop-product'
     - task: Docker@2
+      displayName: buildAndPush
       inputs:
-        containerRegistry: $(containerRegistryDockerConnection)
-        repository: $(imageRepository)
+        containerRegistry: 'acr-product'
+        repository: product
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
         tags: |
@@ -88,21 +92,22 @@ stages:
             displayName: 'kubectl apply'
             inputs:
               connectionType: 'Kubernetes Service Connection'
-              kubernetesServiceEndpoint: 'aks-booking'
+              kubernetesServiceEndpoint: 'aks-product'
               namespace: default
               command: apply
               useConfigurationFile: true
-              configuration: '$(System.DefaultWorkingDirectory)/_carrent-CI-booking/drop/azure/deployment.yml'
+              configuration: '$(System.DefaultWorkingDirectory)/_carrent-CI-product/drop/azure/deployment.yml'
               secretType: 'dockerRegistry'
               containerRegistryType: 'Azure Container Registry'
           - task: Kubernetes@1
             displayName: 'kubectl apply'
             inputs:
               connectionType: 'Kubernetes Service Connection'
-              kubernetesServiceEndpoint: 'aks-booking1'
+              kubernetesServiceEndpoint: 'aks-product1'
               namespace: default
               command: apply
               useConfigurationFile: true
-              configuration: '$(System.DefaultWorkingDirectory)/_carrent-CI-booking/drop/azure/service.yaml'
+              configuration: '$(System.DefaultWorkingDirectory)/_carrent-CI-product/drop/azure/service.yaml'
               secretType: 'dockerRegistry'
               containerRegistryType: 'Azure Container Registry'
+              
