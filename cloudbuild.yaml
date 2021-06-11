@@ -29,7 +29,7 @@ steps:
     args:
       - '-c'
       - |
-        docker push gcr.io/$PROJECT_ID/$_PROJECT_NAME:latest
+        docker push gcr.io/$PROJECT_ID/$_PROJECT_NAME:$COMMIT_SHA
   ### deploy
   - id: 'deploy'
     name: 'gcr.io/cloud-builders/gcloud'
@@ -74,7 +74,7 @@ steps:
             spec:
               containers:
                 - name: $_PROJECT_NAME
-                  image: gcr.io/$PROJECT_ID/$_PROJECT_NAME:latest
+                  image: gcr.io/$PROJECT_ID/$_PROJECT_NAME:$COMMIT_SHA
                   ports:
                     - containerPort: 8080
                   readinessProbe:
