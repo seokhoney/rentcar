@@ -14,7 +14,7 @@ variables:
   # containerRegistryDockerConnection: 'acr'
   # environment: 'aks.default'
 - name: imageRepository
-  value: 'product'
+  value: 'store'
 - name: dockerfilePath
   value: '**/Dockerfile'
 - name: tag
@@ -35,8 +35,6 @@ stages:
   - job: Build
     displayName: Build
     pool:
-      name: Azure Pipelines
-      demands: maven
       vmImage: $(vmImageName)
     steps:
     - task: CacheBeta@1
@@ -48,7 +46,6 @@ stages:
         path: $(MAVEN_CACHE_FOLDER)
       displayName: Cache Maven local repo
     - task: Maven@3
-      displayName: 'Maven pom.xml'
       inputs:
         mavenPomFile: 'pom.xml'
         options: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
@@ -56,19 +53,10 @@ stages:
         jdkVersionOption: '1.8'
         jdkArchitectureOption: 'x64'
         goals: 'package'
-    - task: CopyFiles@2
-      displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
-      inputs:
-        SourceFolder: '$(system.defaultworkingdirectory)'
-        Contents: 'azure/*'
-        TargetFolder: '$(build.artifactstagingdirectory)'
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact: drop-product'
     - task: Docker@2
-      displayName: buildAndPush
       inputs:
-        containerRegistry: 'acr-product'
-        repository: product
+        containerRegistry: $(containerRegistryDockerConnection)
+        repository: $(imageRepository)
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
         tags: |
@@ -89,25 +77,71 @@ stages:
         deploy:
           steps:
           - task: Kubernetes@1
-            displayName: 'kubectl apply'
             inputs:
               connectionType: 'Kubernetes Service Connection'
-              kubernetesServiceEndpoint: 'aks-product'
-              namespace: default
-              command: apply
+              namespace: 'default'
+              command: 'apply'
               useConfigurationFile: true
-              configuration: '$(System.DefaultWorkingDirectory)/_carrent-CI-product/drop/azure/deployment.yml'
+              configurationType: 'inline'
+              inline: |
+                apiVersion: apps/v1
+                kind: Deployment
+                metadata:
+                  name: $(imageRepository)
+                  labels:
+                    app: $(imageRepository)
+                spec:
+                  replicas: 1
+                  selector:
+                    matchLabels:
+                      app: $(imageRepository)
+                  template:
+                    metadata:
+                      labels:
+                        app: $(imageRepository)
+                    spec:
+                      containers:
+                        - name: $(imageRepository)
+                          image: $(containerRegistry)/$(imageRepository):$(tag)
+                          ports:
+                            - containerPort: 8080
+                          readinessProbe:
+                            httpGet:
+                              path: /actuator/health
+                              port: 8080
+                            initialDelaySeconds: 10
+                            timeoutSeconds: 2
+                            periodSeconds: 5
+                            failureThreshold: 10
+                          livenessProbe:
+                            httpGet:
+                              path: /products/1
+                              port: 8080
+                            initialDelaySeconds: 120
+                            timeoutSeconds: 2
+                            periodSeconds: 5
+                            failureThreshold: 5
               secretType: 'dockerRegistry'
               containerRegistryType: 'Azure Container Registry'
           - task: Kubernetes@1
-            displayName: 'kubectl apply'
             inputs:
               connectionType: 'Kubernetes Service Connection'
-              kubernetesServiceEndpoint: 'aks-product1'
-              namespace: default
-              command: apply
+              namespace: 'default'
+              command: 'apply'
               useConfigurationFile: true
-              configuration: '$(System.DefaultWorkingDirectory)/_carrent-CI-product/drop/azure/service.yaml'
+              configurationType: 'inline'
+              inline: |
+                apiVersion: v1
+                kind: Service
+                metadata:
+                  name: $(imageRepository)
+                  labels:
+                    app: $(imageRepository)
+                spec:
+                  ports:
+                    - port: 8080
+                      targetPort: 8080
+                  selector:
+                    app: $(imageRepository)
               secretType: 'dockerRegistry'
               containerRegistryType: 'Azure Container Registry'
-              

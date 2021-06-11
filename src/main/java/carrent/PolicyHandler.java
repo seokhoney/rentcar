@@ -8,28 +8,47 @@ import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
+//import java.util.Optional;
+
 @Service
 public class PolicyHandler{
-    @Autowired ProductRepository productRepository;
+    @Autowired StoreRepository storeRepository;
 
     @StreamListener(KafkaProcessor.INPUT)
-    public void wheneverBookingCancelled_IncreaseStock(@Payload BookingCancelled bookingCancelled){
-
-        if(bookingCancelled.isMe()){        
-            Product product = productRepository.findByProductId(Long.valueOf(bookingCancelled.getProductId()));
-            product.setStock(product.getStock() + bookingCancelled.getQty());
-            productRepository.save(product);  
+    public void wheneverBooked_PrepareCar(@Payload Booked booked){
+        /*
+        if(booked.isMe()){        
+            Optional<Store> optionalStore= storeRepository.findById(booked.getId());
+            Store store = optionalStore.get();
+            storeRepository.save(store);
           }
+          */
+          if(booked.isMe()){            
+            Store store = new Store();
+            store.setBookingId(booked.getId());
+            store.setProductId(booked.getProductId());        
+            store.setStatus("CarRentStarted");
+            store.setQty(booked.getQty());
+            storeRepository.save(store);
+        }  
             
     }
     @StreamListener(KafkaProcessor.INPUT)
-    public void wheneverCarReturned_IncreaseStock(@Payload CarReturned carReturned){
-
-        if(carReturned.isMe()){        
-            Product product = productRepository.findByProductId(Long.valueOf(carReturned.getProductId()));
-            product.setStock(product.getStock() + carReturned.getQty());
-            productRepository.save(product);  
+    public void wheneverBookingCancelled_DeleteBooking(@Payload BookingCancelled bookingCancelled){
+        /*
+        if(bookingCancelled.isMe()){        
+            Optional<Store> optionalStore= storeRepository.findById(bookingCancelled.getId());
+            Store store = optionalStore.get();
+            //store.setStatus("Cancelled");
+            storeRepository.delete(store);
           }
+          */
+          if(bookingCancelled.isMe()){            
+            Store store2 = new Store();
+            store2.setBookingId(bookingCancelled.getId());
+            //store2.setStatus("BookingCancelled");
+            storeRepository.delete(store2);
+        }  
             
     }
 

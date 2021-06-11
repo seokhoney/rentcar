@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: product
+  name: store
   labels:
-    app: product
+    app: store
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: product
+      app: store
   template:
     metadata:
       labels:
-        app: product
+        app: store
     spec:
       containers:
-        - name: product
-          image: username/product:latest
+        - name: store
+          image: kary84/store:latest
           ports:
             - containerPort: 8080
           readinessProbe:
