@@ -361,7 +361,11 @@ http POST http://localhost:8084/bookings productId=1 qty=2 startDate=2021-07-03 
 ```
 < Success >
 
-![image](https://user-images.githubusercontent.com/84000863/122341250-395a9a00-cf7e-11eb-90dd-8dcafe288c0b.png)
+![image](https://user-images.githubusercontent.com/84000863/122513326-3d9dba80-d045-11eb-9bea-5f22ca08a523.png)
+
+- 예약된 후 재고 수량 줄어듬 확인
+
+![image](https://user-images.githubusercontent.com/84000863/122513362-4a221300-d045-11eb-85a8-c1903139ce98.png)
 
 
 
