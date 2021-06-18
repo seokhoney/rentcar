@@ -291,7 +291,7 @@ public interface ProductService {
 
 - 예약된 직후(@PostPersist) 재고수량이 업데이트 되도록 처리 (modifyStock 호출)
 ```
-# Order.java (Entity)
+# Booking.java
 
     @PostPersist
     public void onPostPersist() {
