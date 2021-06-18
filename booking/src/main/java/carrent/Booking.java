@@ -25,8 +25,8 @@ public class Booking {
             .modifyStock(this.getProductId(), this.getQty());
 
             if (rslt) {
-                this.setStatus("Booked");
-                //this.setStatus(System.getenv("STATUS"));
+                //this.setStatus("Booked");
+                this.setStatus(System.getenv("STATUS"));
 
                 Booked booked = new Booked();
                 BeanUtils.copyProperties(this, booked);

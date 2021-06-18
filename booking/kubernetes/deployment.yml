@@ -16,22 +16,12 @@ spec:
     spec:
       containers:
         - name: booking
-          image: karyskccacr.azurecr.io/booking:latest
+          image: user05skccacr.azurecr.io/booking:latest
           ports:
             - containerPort: 8080
-          readinessProbe:
-            httpGet:
-              path: '/actuator/health'
-              port: 8080
-            initialDelaySeconds: 10
-            timeoutSeconds: 2
-            periodSeconds: 5
-            failureThreshold: 10
-          livenessProbe:
-            httpGet:
-              path: '/actuator/health'
-              port: 8080
-            initialDelaySeconds: 120
-            timeoutSeconds: 2
-            periodSeconds: 5
-            failureThreshold: 5
+          env:
+            - name: STATUS
+              valueFrom:
+                configMapKeyRef:
+                  name: storecm
+                  key: status
